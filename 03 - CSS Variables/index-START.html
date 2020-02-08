@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px" onchange="onChange(this)">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px" onchange="onChange(this)">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600" onchange="onChange(this)">
+  </div>
+
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+
+  <style>
+
+    :root {
+      --padding: 10px;
+      --blur: blur(10px);
+      --basecolor: #ffc600;
+    }
+
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+    }
+
+    img {
+      padding: var(--padding);
+      filter: var(--blur);
+      background: var(--basecolor);
+    }
+
+  </style>
+
+  <script>
+    let root = document.documentElement;
+    let img = document.querySelector("img");
+
+    function onChange(e) {
+
+      // didn't use e.attributes["value"]. it only captures the initial value declaration
+      let val = e.value; 
+    
+      if (e.id === "base") {
+        root.style.setProperty("--basecolor", val); 
+        return;
+      }
+
+      // e.attributes to access all attributes of element
+      let size = e.attributes["data-sizing"].value;
+      let formattedval = val+size;
+
+      switch (e.id) {
+        case 'spacing': root.style.setProperty("--padding", formattedval); break;
+        case 'blur': root.style.setProperty("--blur", "blur("+formattedval+")"); break;
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
